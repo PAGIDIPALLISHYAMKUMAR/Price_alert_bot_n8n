@@ -1,0 +1,142 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3145dd31-1f27-4b0f-8cf0-42d34b25e7fe",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://finnhub.io/api/v1/quote?symbol=BINANCE:BTCUSDT&token=d2181ppr01qkdupi6rm0d2181ppr01qkdupi6rmg",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "befe6958-bdbc-45a4-b58d-01f997d83956",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e70657c2-42e6-4c33-b86f-967f3f2e3100",
+              "leftValue": "={{Number($json[\"c\"])}}\n\n",
+              "rightValue": 114000,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "eeabb053-7051-4e01-89b7-a8f523391849",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "6102090322",
+        "text": "=🚨 BTC/USDT Price Alert!\n📈 Current Price: {{$json[\"c\"]}} USDT\n⏰ Triggered at: {{ $now }}\n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        624,
+        -76
+      ],
+      "id": "1fcee843-8197-42a0-874c-66aff7306fa1",
+      "name": "Send a text message",
+      "webhookId": "eda7750c-c4b0-4134-a601-f9b725d5e1d1",
+      "credentials": {
+        "telegramApi": {
+          "id": "bTFkOokrlxGDaiCy",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "91fe130a-ae26-41b9-813b-09d97c61fd4c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "955b27179ab2a2bb475e835b46320e4adbf61fd58053cfac32982059db5f9adb"
+  },
+  "id": "3eHQpqHKdGJKfCEx",
+  "tags": []
+}
