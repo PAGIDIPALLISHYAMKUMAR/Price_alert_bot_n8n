@@ -1,4 +1,4 @@
-Price Alert Bot (n8n Workflow)
+Price Alert Bot (n8n Workflow): 
 This n8n workflow monitors BTC/USDT price and sends Telegram alerts when the price exceeds a set threshold.
 
 Workflow Diagram:
